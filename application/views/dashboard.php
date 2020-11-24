@@ -210,6 +210,59 @@ if($this->session->userdata('role') == 'finance'){ // Jika role-nya finance
 }else if($this->session->userdata('role') == 'direksi'){ // Jika role-nya direksi
     ?>
     <h3 class="text-center py-5"> -- Direksi Panel --</h3>
+
+    <div class="container p-5 bg-light mt-5" style="border-radius: 25px;">
+      <h4 class="mx-5"><?php echo ucwords($curr_filter); ?> Documents: </h4>
+      <div class="row pt-5 mx-5">
+        <?php
+            if($dokumen->num_rows() === 0){
+                echo "<div class='align-center' style='display:flex; flex-direction: column; width: 100%; height: 300px;'>
+                        <div class='text-primary'>
+                            <i class='fad fa-folder-open fa-10x'></i>
+                        </div>
+                        <div>
+                            <h4>There's nothing on the desk</h4>
+                        </div>
+                    </div>";
+            }else{
+                foreach ($dokumen->result() as $dok){
+                    if($dok->status === $curr_filter || $curr_filter === 'all'){
+                        $temp = getDireksiById($direksi,$dok->direksi_id);
+                        echo '<div class="col-lg-12 p-4 mb-3 list-container">
+                            <div class="container-left">
+                                <div class="preview-container">
+                                    <img class="preview-img" src="'.base_url($dok->thumbnail).'" alt="asd">
+                                </div>
+                                <div class="detail-container">
+                                    <div class="detail-title">
+                                        <div>Nama Dokumen </div>
+                                        <div>Direksi - Divisi</div>
+                                        <div>Upload Date </div>
+                                        <div>Due Date </div>
+                                    </div>
+                                    <div class="detail-content">
+                                        <div>: '.$dok->name.'</div>
+                                        <div>: '.ucwords($temp->first_name.' '.$temp->last_name.' - '.$temp->divisi).'</div>
+                                        <div>: '.date('d M Y H:i:s', $dok->upload_date).'</div>
+                                        <div>: '.date('d M Y H:i:s', $dok->due_date).'</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container-right">
+                                <a class="mr-5 align-center text-primary" title="Open" href="'.base_url('index.php/Page/viewmail/'.$dok->dokumen_id).'">
+                                    <i class="fad fa-glasses-alt fa-4x"></i>
+									$temp = getElementDokID($dok->dokumen_id);
+                                </a>
+                                <div class="align-center text-center" style="min-width: 70px;">'.getElementStatus($dok->status).'</div>
+                            </div>
+                        </div>';
+                    }
+                    
+                }
+            }
+        ?>
+      </div>
+    </div>
 <?php
 }
 ?>
@@ -237,4 +290,5 @@ if($this->session->userdata('role') == 'finance'){ // Jika role-nya finance
                     </a>';
         }
     }
+	
 ?>

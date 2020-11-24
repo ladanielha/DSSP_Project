@@ -15,6 +15,19 @@ class Page extends MY_Controller {
         $this->render_backend('dashboard', $data); // load view dashboard.php
     }
 
+    public function viewmail()
+	{
+        if($this->input->get('filter') !== NULL) $data['curr_filter'] = $this->input->get('filter');
+        else $data['curr_filter'] = 'all';
+        $data['curr_page'] = "dashboard";
+        $data['uri'] = $this->uri->segment(3);
+        $data['direksi'] = $this->DatabaseModel->getDatas('direksi');
+        $data['dokumen'] = $this->DatabaseModel->getDatas('dokumen');
+		//check
+		$data['dokumen_detail'] = $this->db->query("SELECT dokumen_id, name, location, upload_date, due_date,status FROM dokumen WHERE dokumen_id = '$uri'");
+        $this->render_backend('viewmail', $data); // load viewmail.php
+	}
+
     public function _get_auto_generate_id(){
         $this->load->model('DatabaseModel');
         $lastId = $this->DatabaseModel->getLastId($this->curr_table);
